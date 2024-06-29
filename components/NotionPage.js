@@ -42,6 +42,9 @@ const NotionPage = ({ post, className }) => {
 
   // 页面文章发生变化时会执行的勾子
   useEffect(() => {
+    // toggle块全部展开
+    allToggleExpand(NOTION_CONFIG)
+
     // 相册视图点击禁止跳转，只能放大查看图片
     if (POST_DISABLE_GALLERY_CLICK) {
       // 针对页面中的gallery视图，点击后是放大图片还是跳转到gallery的内部页面
