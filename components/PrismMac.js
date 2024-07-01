@@ -179,25 +179,63 @@ const renderMermaid = async(mermaidCDN) => {
 function renderPrismMac(codeLineNumbers) {
   const container = document?.getElementById('notion-article')
 
-  // Add line numbers
-  if (codeLineNumbers) {
-    const codeBlocks = container?.getElementsByTagName('pre')
-    if (codeBlocks) {
-      Array.from(codeBlocks).forEach(item => {
-        if (!item.classList.contains('line-numbers')) {
-          item.classList.add('line-numbers')
-          item.style.whiteSpace = 'pre-wrap'
-        }
-      })
-    }
-  }
-  // 重新渲染之前检查所有的多余text
+  // // Add line numbers
+  // if (codeLineNumbers) {
+  //   const codeBlocks = container?.getElementsByTagName('pre')
+  //   if (codeBlocks) {
+  //     Array.from(codeBlocks).forEach(item => {
+  //       if (!item.classList.contains('line-numbers')) {
+  //         item.classList.add('line-numbers')
+  //         item.style.whiteSpace = 'pre-wrap'
+  //       }
+  //     })
+  //   }
+  // }
+  // // 重新渲染之前检查所有的多余text
+  //
+  // try {
+  //   Prism.highlightAll()
+  // } catch (err) {
+  //   console.log('代码渲染', err)
+  // }
 
-  try {
-    Prism.highlightAll()
-  } catch (err) {
-    console.log('代码渲染', err)
+  // 监听#notion-article下pre元素的变化，确保DOM稳定后再执行行号和高亮逻辑
+  const preObserver = new MutationObserver(async (mutationsList) => {
+    mutationsList.forEach(mutation => {
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'PRE') {
+            // 新增的pre元素，检查并添加行号样式
+            if (codeLineNumbers && !node.classList.contains('line-numbers')) {
+              node.classList.add('line-numbers')
+              node.style.whiteSpace = 'pre-wrap'
+            }
+            // 重新高亮所有代码块，确保新加入的也得到处理
+            Prism.highlightAll()
+          }
+        })
+      }
+    })
+  })
+
+  // 开始观察
+  preObserver.observe(container, { childList: true, subtree: true })
+
+  // 初始时直接处理已存在的pre元素
+  const existingPreElements = container.getElementsByTagName('pre')
+  if (codeLineNumbers) {
+    Array.from(existingPreElements).forEach(item => {
+      if (!item.classList.contains('line-numbers')) {
+        item.classList.add('line-numbers')
+        item.style.whiteSpace = 'pre-wrap'
+      }
+    })
   }
+
+  // 确保DOM稳定后才执行highlightAll，以避免异步内容加载完成前的调用
+  setTimeout(() => {
+    Prism.highlightAll()
+  }, 0)
 
   const codeToolBars = container?.getElementsByClassName('code-toolbar')
   // Add pre-mac element for Mac Style UI
