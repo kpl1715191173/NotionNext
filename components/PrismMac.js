@@ -20,7 +20,7 @@ import { siteConfig } from '@/lib/config'
  * @author https://github.com/txs/
  * @returns
  */
-const PrismMac = () => {
+const PrismMac = ({ notionArticleRef }) => {
   const router = useRouter()
   const { isDarkMode } = useGlobal()
   const codeMacBar = siteConfig('CODE_MAC_BAR')
@@ -55,6 +55,12 @@ const PrismMac = () => {
       renderCollapseCode(codeCollapse, codeCollapseExpandDefault)
     })
   }, [router, isDarkMode])
+
+  useEffect(() => {
+    if (notionArticleRef.current) {
+      console.log(notionArticleRef)
+    }
+  })
 
   return <></>
 }

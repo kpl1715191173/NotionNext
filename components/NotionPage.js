@@ -16,6 +16,7 @@ import { NotionRenderer } from 'react-notion-x'
  */
 const NotionPage = ({ post, className }) => {
   const { NOTION_CONFIG } = useGlobal()
+  const notionArticleRef = useRef(null)
 
   // 是否关闭数据库和画册的点击跳转
   const POST_DISABLE_GALLERY_CLICK = siteConfig('POST_DISABLE_GALLERY_CLICK')
@@ -96,7 +97,8 @@ const NotionPage = ({ post, className }) => {
   return (
     <div
       id='notion-article'
-      className={`mx-auto overflow-hidden ${className || ''}`}>
+      className={`mx-auto overflow-hidden ${className || ''}`}
+      ref={notionArticleRef}>
       <NotionRenderer
         recordMap={post?.blockMap}
         mapPageUrl={mapPageUrl}
@@ -112,7 +114,7 @@ const NotionPage = ({ post, className }) => {
       />
 
       <AdEmbed />
-      <PrismMac />
+      <PrismMac notionArticleRef={notionArticleRef} />
     </div>
   )
 }
