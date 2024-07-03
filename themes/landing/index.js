@@ -99,7 +99,7 @@ const LayoutSlug = (props) => {
   }
 
   return <>
-        <div id='container-inner' className='mx-auto max-w-screen-lg p-12'>
+        <div id='container-inner' className='mx-auto max-w-screen-lg p-12 article-wrapper-main'>
             <NotionPage {...props} />
         </div>
     </>

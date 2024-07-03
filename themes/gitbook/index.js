@@ -333,7 +333,7 @@ const LayoutSlug = props => {
 
           {/* Notion文章主体 */}
           {post && (
-            <section id='article-wrapper' className='px-1'>
+            <section id='article-wrapper' className='px-1 article-wrapper-main'>
               <NotionPage post={post} />
 
               {/* 分享 */}

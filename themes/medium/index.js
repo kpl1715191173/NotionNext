@@ -196,7 +196,7 @@ const LayoutSlug = props => {
                 <ArticleInfo {...props} />
 
                 {/* Notion文章主体 */}
-                <section className="px-1 max-w-4xl">
+                <section className="px-1 max-w-4xl article-wrapper-main">
                     {post && (<NotionPage post={post} />)}
                 </section>
 

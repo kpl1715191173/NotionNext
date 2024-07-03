@@ -88,7 +88,7 @@ export default function ArticleDetail(props) {
         </header>
 
         {/* Notion文章主体 */}
-        <section id='article-wrapper'>
+        <section id='article-wrapper' className='article-wrapper-main'>
           {post && <NotionPage post={post} />}
         </section>
 

@@ -226,7 +226,7 @@ const LayoutSlug = props => {
 
       <div
         id='article-wrapper'
-        className={`px-2  ${fullWidth ? '' : 'xl:max-w-4xl 2xl:max-w-6xl'}`}>
+        className={`article-wrapper-section px-2  ${fullWidth ? '' : 'xl:max-w-4xl 2xl:max-w-6xl'}`}>
         {/* 文章信息 */}
         <ArticleInfo post={post} />
 

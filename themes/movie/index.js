@@ -296,7 +296,7 @@ const LayoutSlug = props => {
   return (
     <>
       {!lock ? (
-        <div id='article-wrapper' className='px-2 max-w-5xl 2xl:max-w-[70%] mx-auto'>
+        <div id='article-wrapper' className='px-2 max-w-5xl 2xl:max-w-[70%] mx-auto article-wrapper-main'>
           {/* 标题 */}
           <ArticleInfo post={post} />
           {/* 页面元素 */}

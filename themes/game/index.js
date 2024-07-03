@@ -317,7 +317,7 @@ const LayoutSlug = props => {
 
                 {/* 详情描述 */}
                 {post && (
-                  <div className='bg-white shadow-md my-2 p-4 rounded-md dark:bg-black'>
+                  <div className='bg-white shadow-md my-2 p-4 rounded-md dark:bg-black article-wrapper-main'>
                     <PostInfo post={post} />
                     <NotionPage post={post} />
                     {/* 广告嵌入 */}

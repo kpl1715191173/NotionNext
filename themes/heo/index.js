@@ -294,7 +294,7 @@ const LayoutSlug = props => {
             <article itemScope itemType='https://schema.org/Movie'>
               {/* Notion文章主体 */}
               <section
-                className='wow fadeInUp p-5 justify-center mx-auto'
+                className='wow fadeInUp p-5 justify-center mx-auto article-wrapper-main'
                 data-wow-delay='.2s'>
                 <WWAds orientation='horizontal' className='w-full' />
                 {post && <NotionPage post={post} />}
