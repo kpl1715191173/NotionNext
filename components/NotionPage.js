@@ -176,8 +176,16 @@ const autoScrollToHash = () => {
  */
 const allToggleExpand = (NOTION_CONFIG) => {
   const TOGGLE_EXPAND = JSON.parse(siteConfig('TOGGLE_EXPAND', false, NOTION_CONFIG))
+  const THEME = JSON.parse(siteConfig('THEME', null, NOTION_CONFIG))
+
   if (TOGGLE_EXPAND) {
-    const wrapperElement = document.getElementById('wrapper')
+    let wrapperElement = null
+    if (THEME === 'hexo')
+      wrapperElement = document.getElementById('wrapper')
+    else if (THEME === 'heo')
+      wrapperElement = document.getElementById('article-wrapper')
+
+
     if (wrapperElement) {
       const detailsElements = wrapperElement.getElementsByClassName('notion-toggle')
       if (detailsElements.length > 0) {
