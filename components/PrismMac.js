@@ -260,7 +260,7 @@ function renderPrismMac(codeLineNumbers) {
   }
 
   // 初始时直接处理已存在的pre元素
-  const existingPreElements = container.getElementsByTagName('pre')
+  const existingPreElements = container?.getElementsByTagName('pre')
   if (codeLineNumbers) {
     Array.from(existingPreElements).forEach(item => {
       if (!item.classList.contains('line-numbers')) {
