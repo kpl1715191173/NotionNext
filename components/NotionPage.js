@@ -1,12 +1,14 @@
+import dynamic from 'next/dynamic'
+import { useEffect, useRef } from 'react'
+import { NotionRenderer } from 'react-notion-x'
 import { siteConfig } from '@/lib/config'
+import { THEME } from 'blog.config'
 import { compressImage, mapImgUrl } from '@/lib/notion/mapImage'
 import { isBrowser } from '@/lib/utils'
 import { useGlobal } from '@/lib/global'
 import mediumZoom from '@fisch0920/medium-zoom'
 import 'katex/dist/katex.min.css'
-import dynamic from 'next/dynamic'
-import { useEffect, useRef } from 'react'
-import { NotionRenderer } from 'react-notion-x'
+
 
 /**
  * 整个站点的核心组件
@@ -176,7 +178,6 @@ const autoScrollToHash = () => {
  */
 const allToggleExpand = (NOTION_CONFIG) => {
   const TOGGLE_EXPAND = JSON.parse(siteConfig('TOGGLE_EXPAND', false, NOTION_CONFIG))
-  const THEME = JSON.parse(siteConfig('THEME', null, NOTION_CONFIG))
 
   if (TOGGLE_EXPAND) {
     let wrapperElement = null
