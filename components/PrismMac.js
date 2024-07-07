@@ -178,7 +178,7 @@ const renderMermaid = async(mermaidCDN) => {
 
 function renderPrismMac(codeLineNumbers) {
   // 获取文章内容 <NotionPage> 的包裹元素
-  const container = document?.getElementsByClassName('article-wrapper-section')[0]
+  const container = document?.getElementsByClassName('article-wrapper-main')[0]
 
   // // Add line numbers
   // if (codeLineNumbers) {
