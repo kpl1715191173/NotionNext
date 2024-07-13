@@ -235,10 +235,8 @@ function renderPrismMac(codeLineNumbers) {
 
   // 监听#notion-article下的.code-toolbar元素变化，确保DOM稳定后添加Mac风格UI元素
   const macStyleObserver = new MutationObserver((mutationsList) => {
-    console.log('1. mutationsList: ', mutationsList, mutationsList.length)
     setTimeout(() => {
       mutationsList.forEach(mutation => {
-        console.log('2. mutation: ', mutation)
         if (mutation.type === 'childList') {
           mutation.addedNodes.forEach(node => {
             if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('code-toolbar')) {
