@@ -216,7 +216,6 @@ function renderPrismMac(codeLineNumbers) {
 
   // 监听#notion-article下pre元素的变化，确保DOM稳定后再执行行号和高亮逻辑
   const lineNumberObserver = new MutationObserver(async (mutationsList) => {
-    console.log("HL: ", mutationsList.length)
     mutationsList.forEach(mutation => {
       if (mutation.type === 'childList') {
         mutation.addedNodes.forEach(node => {
@@ -253,7 +252,7 @@ function renderPrismMac(codeLineNumbers) {
           });
         }
       });
-    }, 100)
+    }, 500)
   });
 
   // 开始观察
