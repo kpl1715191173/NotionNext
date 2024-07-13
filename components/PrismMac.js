@@ -180,100 +180,102 @@ function renderPrismMac(codeLineNumbers) {
   // 获取文章内容 <NotionPage> 的包裹元素
   const container = document?.getElementsByClassName('article-wrapper-main')[0]
 
-  // Add line numbers
+  // // Add line numbers
+  // if (codeLineNumbers) {
+  //   const codeBlocks = container?.getElementsByTagName('pre')
+  //   if (codeBlocks) {
+  //     Array.from(codeBlocks).forEach(item => {
+  //       if (!item.classList.contains('line-numbers')) {
+  //         item.classList.add('line-numbers')
+  //         item.style.whiteSpace = 'pre-wrap'
+  //       }
+  //     })
+  //   }
+  // }
+  // // 重新渲染之前检查所有的多余text
+  //
+  // try {
+  //   Prism.highlightAll()
+  // } catch (err) {
+  //   console.log('代码渲染', err)
+  // }
+  //
+  // const codeToolBars = container?.getElementsByClassName('code-toolbar')
+  // // Add pre-mac element for Mac Style UI
+  // if (codeToolBars) {
+  //   Array.from(codeToolBars).forEach(item => {
+  //     const existPreMac = item.getElementsByClassName('pre-mac')
+  //     if (existPreMac.length < codeToolBars.length) {
+  //       const preMac = document.createElement('div')
+  //       preMac.classList.add('pre-mac')
+  //       preMac.innerHTML = '<span></span><span></span><span></span>'
+  //       item?.appendChild(preMac, item)
+  //     }
+  //   })
+  // }
+
+  // 监听#notion-article下pre元素的变化，确保DOM稳定后再执行行号和高亮逻辑
+  const lineNumberObserver = new MutationObserver(async (mutationsList) => {
+    mutationsList.forEach(mutation => {
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'PRE') {
+            // 新增的pre元素，检查并添加行号样式
+            if (codeLineNumbers && !node.classList.contains('line-numbers')) {
+              node.classList.add('line-numbers')
+              node.style.whiteSpace = 'pre-wrap'
+            }
+            // 重新高亮所有代码块，确保新加入的也得到处理
+            Prism.highlightAll()
+          }
+        })
+      }
+    })
+  })
+
+  // 监听#notion-article下的.code-toolbar元素变化，确保DOM稳定后添加Mac风格UI元素
+  const macStyleObserver = new MutationObserver((mutationsList) => {
+    console.log('1. mutationsList: ', mutationsList)
+    mutationsList.forEach(mutation => {
+      console.log('2. mutation: ', mutation)
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('code-toolbar')) {
+            // 新增的.code-toolbar元素，检查并添加Mac风格UI元素
+            const existPreMac = node.querySelector('.pre-mac');
+            if (!existPreMac) {
+              const preMac = document.createElement('div')
+              preMac.classList.add('pre-mac')
+              preMac.innerHTML = '<span></span><span></span><span></span>'
+              node.insertBefore(preMac, node.firstChild)
+            }
+          }
+        });
+      }
+    });
+  });
+
+  // 开始观察
+  if (container) {
+    lineNumberObserver.observe(container, { childList: true, subtree: true })
+    macStyleObserver.observe(container, { childList: true, subtree: true })
+  }
+
+  // 初始时直接处理已存在的pre元素
+  const existingPreElements = container?.getElementsByTagName('pre')
   if (codeLineNumbers) {
-    const codeBlocks = container?.getElementsByTagName('pre')
-    if (codeBlocks) {
-      Array.from(codeBlocks).forEach(item => {
-        if (!item.classList.contains('line-numbers')) {
-          item.classList.add('line-numbers')
-          item.style.whiteSpace = 'pre-wrap'
-        }
-      })
-    }
-  }
-  // 重新渲染之前检查所有的多余text
-
-  try {
-    Prism.highlightAll()
-  } catch (err) {
-    console.log('代码渲染', err)
-  }
-
-  const codeToolBars = container?.getElementsByClassName('code-toolbar')
-  // Add pre-mac element for Mac Style UI
-  if (codeToolBars) {
-    Array.from(codeToolBars).forEach(item => {
-      const existPreMac = item.getElementsByClassName('pre-mac')
-      if (existPreMac.length < codeToolBars.length) {
-        const preMac = document.createElement('div')
-        preMac.classList.add('pre-mac')
-        preMac.innerHTML = '<span></span><span></span><span></span>'
-        item?.appendChild(preMac, item)
+    Array.from(existingPreElements).forEach(item => {
+      if (!item.classList.contains('line-numbers')) {
+        item.classList.add('line-numbers')
+        item.style.whiteSpace = 'pre-wrap'
       }
     })
   }
 
-  // // 监听#notion-article下pre元素的变化，确保DOM稳定后再执行行号和高亮逻辑
-  // const lineNumberObserver = new MutationObserver(async (mutationsList) => {
-  //   mutationsList.forEach(mutation => {
-  //     if (mutation.type === 'childList') {
-  //       mutation.addedNodes.forEach(node => {
-  //         if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'PRE') {
-  //           // 新增的pre元素，检查并添加行号样式
-  //           if (codeLineNumbers && !node.classList.contains('line-numbers')) {
-  //             node.classList.add('line-numbers')
-  //             node.style.whiteSpace = 'pre-wrap'
-  //           }
-  //           // 重新高亮所有代码块，确保新加入的也得到处理
-  //           Prism.highlightAll()
-  //         }
-  //       })
-  //     }
-  //   })
-  // })
-
-  // // 监听#notion-article下的.code-toolbar元素变化，确保DOM稳定后添加Mac风格UI元素
-  // const macStyleObserver = new MutationObserver((mutationsList) => {
-  //   mutationsList.forEach(mutation => {
-  //     if (mutation.type === 'childList') {
-  //       mutation.addedNodes.forEach(node => {
-  //         if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('code-toolbar')) {
-  //           // 新增的.code-toolbar元素，检查并添加Mac风格UI元素
-  //           const existPreMac = node.querySelector('.pre-mac');
-  //           if (!existPreMac) {
-  //             const preMac = document.createElement('div')
-  //             preMac.classList.add('pre-mac')
-  //             preMac.innerHTML = '<span></span><span></span><span></span>'
-  //             node.insertBefore(preMac, node.firstChild)
-  //           }
-  //         }
-  //       });
-  //     }
-  //   });
-  // });
-
-  // // 开始观察
-  // if (container) {
-  //   lineNumberObserver.observe(container, { childList: true, subtree: true })
-  //   macStyleObserver.observe(container, { childList: true, subtree: true })
-  // }
-
-  // // 初始时直接处理已存在的pre元素
-  // const existingPreElements = container?.getElementsByTagName('pre')
-  // if (codeLineNumbers) {
-  //   Array.from(existingPreElements).forEach(item => {
-  //     if (!item.classList.contains('line-numbers')) {
-  //       item.classList.add('line-numbers')
-  //       item.style.whiteSpace = 'pre-wrap'
-  //     }
-  //   })
-  // }
-
-  // // 确保DOM稳定后才执行highlightAll，以避免异步内容加载完成前的调用
-  // setTimeout(() => {
-  //   Prism.highlightAll()
-  // }, 0)
+  // 确保DOM稳定后才执行highlightAll，以避免异步内容加载完成前的调用
+  setTimeout(() => {
+    Prism.highlightAll()
+  }, 0)
 
   // 折叠代码行号bug
   if (codeLineNumbers) {
