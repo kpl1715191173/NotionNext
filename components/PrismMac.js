@@ -257,8 +257,10 @@ function renderPrismMac(codeLineNumbers) {
 
   // 开始观察
   if (container) {
-    lineNumberObserver.observe(container, { childList: true, subtree: true })
-    macStyleObserver.observe(container, { childList: true, subtree: true })
+    setTimeout(() => {
+      lineNumberObserver.observe(container, { childList: true, subtree: true })
+      macStyleObserver.observe(container, { childList: true, subtree: true })
+    }, 1500)
   }
 
   // 初始时直接处理已存在的pre元素
