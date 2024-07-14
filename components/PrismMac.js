@@ -216,21 +216,23 @@ function renderPrismMac(codeLineNumbers) {
 
   // 监听#notion-article下pre元素的变化，确保DOM稳定后再执行行号和高亮逻辑
   const lineNumberObserver = new MutationObserver(async (mutationsList) => {
-    mutationsList.forEach(mutation => {
-      if (mutation.type === 'childList') {
-        mutation.addedNodes.forEach(node => {
-          if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'PRE') {
-            // 新增的pre元素，检查并添加行号样式
-            if (codeLineNumbers && !node.classList.contains('line-numbers')) {
-              node.classList.add('line-numbers')
-              node.style.whiteSpace = 'pre-wrap'
+    setTimeout(() => {
+      mutationsList.forEach(mutation => {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'PRE') {
+              // 新增的pre元素，检查并添加行号样式
+              if (codeLineNumbers && !node.classList.contains('line-numbers')) {
+                node.classList.add('line-numbers')
+                node.style.whiteSpace = 'pre-wrap'
+              }
+              // 重新高亮所有代码块，确保新加入的也得到处理
+              Prism.highlightAll()
             }
-            // 重新高亮所有代码块，确保新加入的也得到处理
-            Prism.highlightAll()
-          }
-        })
-      }
-    })
+          })
+        }
+      })
+    }, 500)
   })
 
   // 监听#notion-article下的.code-toolbar元素变化，确保DOM稳定后添加Mac风格UI元素
