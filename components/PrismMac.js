@@ -38,22 +38,43 @@ const PrismMac = ({ notionArticleRef }) => {
   const codeCollapse = siteConfig('CODE_COLLAPSE')
   const codeCollapseExpandDefault = siteConfig('CODE_COLLAPSE_EXPAND_DEFAULT')
 
-  useEffect(() => {
-    if (codeMacBar) {
-      loadExternalResource('/css/prism-mac-style.css', 'css').then()
-    }
-    // 加载prism样式
-    loadPrismThemeCSS(isDarkMode, prismThemeSwitch, prismThemeDarkPath, prismThemeLightPath, prismThemePrefixPath)
-    // 折叠代码
-    loadExternalResource(prismjsAutoLoader, 'js').then((url) => {
-      if (window?.Prism?.plugins?.autoloader) {
-        window.Prism.plugins.autoloader.languages_path = prismjsPath
-      }
+  // useEffect(() => {
+  //   if (codeMacBar) {
+  //     loadExternalResource('/css/prism-mac-style.css', 'css').then()
+  //   }
+  //   // 加载prism样式
+  //   loadPrismThemeCSS(isDarkMode, prismThemeSwitch, prismThemeDarkPath, prismThemeLightPath, prismThemePrefixPath)
+  //   // 折叠代码
+  //   loadExternalResource(prismjsAutoLoader, 'js').then((url) => {
+  //     if (window?.Prism?.plugins?.autoloader) {
+  //       window.Prism.plugins.autoloader.languages_path = prismjsPath
+  //     }
+  //
+  //     renderPrismMac(codeLineNumbers)
+  //     renderMermaid(mermaidCDN).then()
+  //     renderCollapseCode(codeCollapse, codeCollapseExpandDefault)
+  //   })
+  // }, [router, isDarkMode])
 
-      renderPrismMac(codeLineNumbers)
-      renderMermaid(mermaidCDN).then()
-      renderCollapseCode(codeCollapse, codeCollapseExpandDefault)
-    })
+  useEffect(() => {
+    const d = notionArticleRef?.current
+    if (!!d && d.parentElement.classList.contains('article-wrapper-main')) {
+      if (codeMacBar) {
+        loadExternalResource('/css/prism-mac-style.css', 'css').then()
+      }
+      // 加载prism样式
+      loadPrismThemeCSS(isDarkMode, prismThemeSwitch, prismThemeDarkPath, prismThemeLightPath, prismThemePrefixPath)
+      // 折叠代码
+      loadExternalResource(prismjsAutoLoader, 'js').then((url) => {
+        if (window?.Prism?.plugins?.autoloader) {
+          window.Prism.plugins.autoloader.languages_path = prismjsPath
+        }
+
+        renderPrismMac(codeLineNumbers, d)
+        renderMermaid(mermaidCDN).then()
+        renderCollapseCode(codeCollapse, codeCollapseExpandDefault)
+      })
+    }
   }, [router, isDarkMode])
 
   return <></>
@@ -86,11 +107,11 @@ const loadPrismThemeCSS = (isDarkMode, prismThemeSwitch, prismThemeDarkPath, pri
 /*
  * 将代码块转为可折叠对象
  */
-const renderCollapseCode = (codeCollapse, codeCollapseExpandDefault) => {
+const renderCollapseCode = (codeCollapse, codeCollapseExpandDefault, ctn) => {
   if (!codeCollapse) {
     return
   }
-  const codeBlocks = document.querySelectorAll('.code-toolbar')
+  const codeBlocks = ctn.querySelectorAll('.code-toolbar')
   for (const codeBlock of codeBlocks) {
     // 判断当前元素是否被包裹
     if (codeBlock.closest('.collapse-wrapper')) {
@@ -176,9 +197,9 @@ const renderMermaid = async(mermaidCDN) => {
   }
 }
 
-function renderPrismMac(codeLineNumbers) {
+function renderPrismMac(codeLineNumbers, ctn) {
   // 获取文章内容 <NotionPage> 的包裹元素
-  const container = document?.getElementsByClassName('article-wrapper-main')[0]
+  // const container = document?.getElementsByClassName('article-wrapper-main')[0]
 
   // // Add line numbers
   // if (codeLineNumbers) {
@@ -258,9 +279,9 @@ function renderPrismMac(codeLineNumbers) {
   });
 
   // 开始观察
-  if (container) {
-    lineNumberObserver.observe(container, { childList: true, subtree: true })
-    macStyleObserver.observe(container, { childList: true, subtree: true })
+  if (ctn) {
+    lineNumberObserver.observe(ctn, { childList: true, subtree: true })
+    macStyleObserver.observe(ctn, { childList: true, subtree: true })
   }
 
   // 初始时直接处理已存在的pre元素
