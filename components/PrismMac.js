@@ -221,7 +221,8 @@ function renderPrismMac(codeLineNumbers, ctn) {
   //   console.log('代码渲染', err)
   // }
   //
-  const codeToolBars = container?.getElementsByClassName('code-toolbar')
+  const codeToolBars = ctn?.getElementsByClassName('code-toolbar')
+  // const codeToolBars = container?.getElementsByClassName('code-toolbar')
   // Add pre-mac element for Mac Style UI
   if (codeToolBars) {
     Array.from(codeToolBars).forEach(item => {
