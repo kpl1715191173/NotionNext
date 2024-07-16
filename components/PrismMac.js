@@ -221,19 +221,19 @@ function renderPrismMac(codeLineNumbers, ctn) {
   //   console.log('代码渲染', err)
   // }
   //
-  // const codeToolBars = container?.getElementsByClassName('code-toolbar')
-  // // Add pre-mac element for Mac Style UI
-  // if (codeToolBars) {
-  //   Array.from(codeToolBars).forEach(item => {
-  //     const existPreMac = item.getElementsByClassName('pre-mac')
-  //     if (existPreMac.length < codeToolBars.length) {
-  //       const preMac = document.createElement('div')
-  //       preMac.classList.add('pre-mac')
-  //       preMac.innerHTML = '<span></span><span></span><span></span>'
-  //       item?.appendChild(preMac, item)
-  //     }
-  //   })
-  // }
+  const codeToolBars = container?.getElementsByClassName('code-toolbar')
+  // Add pre-mac element for Mac Style UI
+  if (codeToolBars) {
+    Array.from(codeToolBars).forEach(item => {
+      const existPreMac = item.getElementsByClassName('pre-mac')
+      if (existPreMac.length < codeToolBars.length) {
+        const preMac = document.createElement('div')
+        preMac.classList.add('pre-mac')
+        preMac.innerHTML = '<span></span><span></span><span></span>'
+        item?.appendChild(preMac, item)
+      }
+    })
+  }
 
   // 监听#notion-article下pre元素的变化，确保DOM稳定后再执行行号和高亮逻辑
   const lineNumberObserver = new MutationObserver(async (mutationsList) => {
@@ -257,31 +257,31 @@ function renderPrismMac(codeLineNumbers, ctn) {
   })
 
   // 监听#notion-article下的.code-toolbar元素变化，确保DOM稳定后添加Mac风格UI元素
-  const macStyleObserver = new MutationObserver((mutationsList) => {
-    setTimeout(() => {
-      mutationsList.forEach(mutation => {
-        if (mutation.type === 'childList') {
-          mutation.addedNodes.forEach(node => {
-            if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('code-toolbar')) {
-              // 新增的.code-toolbar元素，检查并添加Mac风格UI元素
-              const existPreMac = node.querySelector('.pre-mac');
-              if (!existPreMac) {
-                const preMac = document.createElement('div')
-                preMac.classList.add('pre-mac')
-                preMac.innerHTML = '<span></span><span></span><span></span>'
-                node.insertBefore(preMac, node.firstChild)
-              }
-            }
-          });
-        }
-      });
-    }, 500)
-  });
+  // const macStyleObserver = new MutationObserver((mutationsList) => {
+  //   setTimeout(() => {
+  //     mutationsList.forEach(mutation => {
+  //       if (mutation.type === 'childList') {
+  //         mutation.addedNodes.forEach(node => {
+  //           if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('code-toolbar')) {
+  //             // 新增的.code-toolbar元素，检查并添加Mac风格UI元素
+  //             const existPreMac = node.querySelector('.pre-mac');
+  //             if (!existPreMac) {
+  //               const preMac = document.createElement('div')
+  //               preMac.classList.add('pre-mac')
+  //               preMac.innerHTML = '<span></span><span></span><span></span>'
+  //               node.insertBefore(preMac, node.firstChild)
+  //             }
+  //           }
+  //         });
+  //       }
+  //     });
+  //   }, 500)
+  // });
 
   // 开始观察
   if (ctn) {
     lineNumberObserver.observe(ctn, { childList: true, subtree: true })
-    macStyleObserver.observe(ctn, { childList: true, subtree: true })
+    // macStyleObserver.observe(ctn, { childList: true, subtree: true })
   }
 
   // 初始时直接处理已存在的pre元素
