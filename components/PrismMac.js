@@ -258,7 +258,7 @@ function renderPrismMac(codeLineNumbers, ctn) {
 
   // 监听#notion-article下的.code-toolbar元素变化，确保DOM稳定后添加Mac风格UI元素
   const macStyleObserver = new MutationObserver((mutationsList) => {
-    // setTimeout(() => {
+    setTimeout(() => {
       mutationsList.forEach(mutation => {
         if (mutation.type === 'childList') {
           mutation.addedNodes.forEach(node => {
@@ -275,7 +275,7 @@ function renderPrismMac(codeLineNumbers, ctn) {
           });
         }
       });
-    // }, 500)
+    }, 500)
   });
 
   // 开始观察
