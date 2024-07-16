@@ -197,6 +197,12 @@ const renderMermaid = async(mermaidCDN) => {
   }
 }
 
+/**
+ * 渲染行号和mac样式
+ * 行号通过MutationObserver监听，mac样式直接添加
+ * @param codeLineNumbers 是否显示行号
+ * @param ctn <NotionPage /> 的包裹元素
+ */
 function renderPrismMac(codeLineNumbers, ctn) {
   // 获取文章内容 <NotionPage> 的包裹元素
   // const container = document?.getElementsByClassName('article-wrapper-main')[0]
