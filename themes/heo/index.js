@@ -372,7 +372,7 @@ const Layout404 = props => {
             <div className='error-content flex flex-col md:flex-row w-full mt-12 h-[30rem] md:h-96 justify-center items-center bg-white dark:bg-[#1B1C20] border dark:border-gray-800 rounded-3xl'>
               {/* 左侧动图 */}
               <LazyImage
-                className='error-img w-96 md:h-full p-4 mr-8'
+                className='error-img w-96 md:h-full p-4 ml-16'
                 src={
                   'https://raw.githubusercontent.com/kpl1715191173/source_box/main/images/blog404.svg'
                 }></LazyImage>
