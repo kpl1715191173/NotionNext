@@ -38,22 +38,43 @@ const PrismMac = ({ notionArticleRef }) => {
   const codeCollapse = siteConfig('CODE_COLLAPSE')
   const codeCollapseExpandDefault = siteConfig('CODE_COLLAPSE_EXPAND_DEFAULT')
 
-  useEffect(() => {
-    if (codeMacBar) {
-      loadExternalResource('/css/prism-mac-style.css', 'css').then()
-    }
-    // 加载prism样式
-    loadPrismThemeCSS(isDarkMode, prismThemeSwitch, prismThemeDarkPath, prismThemeLightPath, prismThemePrefixPath)
-    // 折叠代码
-    loadExternalResource(prismjsAutoLoader, 'js').then((url) => {
-      if (window?.Prism?.plugins?.autoloader) {
-        window.Prism.plugins.autoloader.languages_path = prismjsPath
-      }
+  // useEffect(() => {
+  //   if (codeMacBar) {
+  //     loadExternalResource('/css/prism-mac-style.css', 'css').then()
+  //   }
+  //   // 加载prism样式
+  //   loadPrismThemeCSS(isDarkMode, prismThemeSwitch, prismThemeDarkPath, prismThemeLightPath, prismThemePrefixPath)
+  //   // 折叠代码
+  //   loadExternalResource(prismjsAutoLoader, 'js').then((url) => {
+  //     if (window?.Prism?.plugins?.autoloader) {
+  //       window.Prism.plugins.autoloader.languages_path = prismjsPath
+  //     }
+  //
+  //     renderPrismMac(codeLineNumbers)
+  //     renderMermaid(mermaidCDN).then()
+  //     renderCollapseCode(codeCollapse, codeCollapseExpandDefault)
+  //   })
+  // }, [router, isDarkMode])
 
-      renderPrismMac(codeLineNumbers)
-      renderMermaid(mermaidCDN).then()
-      renderCollapseCode(codeCollapse, codeCollapseExpandDefault)
-    })
+  useEffect(() => {
+    const d = notionArticleRef?.current
+    if (!!d && d.parentElement.classList.contains('article-wrapper-main')) {
+      if (codeMacBar) {
+        loadExternalResource('/css/prism-mac-style.css', 'css').then()
+      }
+      // 加载prism样式
+      loadPrismThemeCSS(isDarkMode, prismThemeSwitch, prismThemeDarkPath, prismThemeLightPath, prismThemePrefixPath)
+      // 折叠代码
+      loadExternalResource(prismjsAutoLoader, 'js').then((url) => {
+        if (window?.Prism?.plugins?.autoloader) {
+          window.Prism.plugins.autoloader.languages_path = prismjsPath
+        }
+
+        renderPrismMac(codeLineNumbers, d)
+        renderMermaid(mermaidCDN).then()
+        renderCollapseCode(codeCollapse, codeCollapseExpandDefault)
+      })
+    }
   }, [router, isDarkMode])
 
   return <></>
@@ -86,11 +107,11 @@ const loadPrismThemeCSS = (isDarkMode, prismThemeSwitch, prismThemeDarkPath, pri
 /*
  * 将代码块转为可折叠对象
  */
-const renderCollapseCode = (codeCollapse, codeCollapseExpandDefault) => {
+const renderCollapseCode = (codeCollapse, codeCollapseExpandDefault, ctn) => {
   if (!codeCollapse) {
     return
   }
-  const codeBlocks = document.querySelectorAll('.code-toolbar')
+  const codeBlocks = ctn.querySelectorAll('.code-toolbar')
   for (const codeBlock of codeBlocks) {
     // 判断当前元素是否被包裹
     if (codeBlock.closest('.collapse-wrapper')) {
@@ -176,9 +197,15 @@ const renderMermaid = async(mermaidCDN) => {
   }
 }
 
-function renderPrismMac(codeLineNumbers) {
+/**
+ * 渲染行号和mac样式
+ * 行号通过MutationObserver监听，mac样式直接添加
+ * @param codeLineNumbers 是否显示行号
+ * @param ctn <NotionPage /> 的包裹元素
+ */
+function renderPrismMac(codeLineNumbers, ctn) {
   // 获取文章内容 <NotionPage> 的包裹元素
-  const container = document?.getElementsByClassName('article-wrapper-main')[0]
+  // const container = document?.getElementsByClassName('article-wrapper-main')[0]
 
   // // Add line numbers
   // if (codeLineNumbers) {
@@ -199,68 +226,73 @@ function renderPrismMac(codeLineNumbers) {
   // } catch (err) {
   //   console.log('代码渲染', err)
   // }
-
+  //
+  const codeToolBars = ctn?.getElementsByClassName('code-toolbar')
   // const codeToolBars = container?.getElementsByClassName('code-toolbar')
-  // // Add pre-mac element for Mac Style UI
-  // if (codeToolBars) {
-  //   Array.from(codeToolBars).forEach(item => {
-  //     const existPreMac = item.getElementsByClassName('pre-mac')
-  //     if (existPreMac.length < codeToolBars.length) {
-  //       const preMac = document.createElement('div')
-  //       preMac.classList.add('pre-mac')
-  //       preMac.innerHTML = '<span></span><span></span><span></span>'
-  //       item?.appendChild(preMac, item)
-  //     }
-  //   })
-  // }
+  // Add pre-mac element for Mac Style UI
+  if (codeToolBars) {
+    Array.from(codeToolBars).forEach(item => {
+      const existPreMac = item.getElementsByClassName('pre-mac')
+      if (existPreMac.length < codeToolBars.length) {
+        const preMac = document.createElement('div')
+        preMac.classList.add('pre-mac')
+        preMac.innerHTML = '<span></span><span></span><span></span>'
+        item?.appendChild(preMac, item)
+      }
+    })
+  }
 
   // 监听#notion-article下pre元素的变化，确保DOM稳定后再执行行号和高亮逻辑
   const lineNumberObserver = new MutationObserver(async (mutationsList) => {
-    mutationsList.forEach(mutation => {
-      if (mutation.type === 'childList') {
-        mutation.addedNodes.forEach(node => {
-          if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'PRE') {
-            // 新增的pre元素，检查并添加行号样式
-            if (codeLineNumbers && !node.classList.contains('line-numbers')) {
-              node.classList.add('line-numbers')
-              node.style.whiteSpace = 'pre-wrap'
+    setTimeout(() => {
+      mutationsList.forEach(mutation => {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'PRE') {
+              // 新增的pre元素，检查并添加行号样式
+              if (codeLineNumbers && !node.classList.contains('line-numbers')) {
+                node.classList.add('line-numbers')
+                node.style.whiteSpace = 'pre-wrap'
+              }
+              // 重新高亮所有代码块，确保新加入的也得到处理
+              Prism.highlightAll()
             }
-            // 重新高亮所有代码块，确保新加入的也得到处理
-            Prism.highlightAll()
-          }
-        })
-      }
-    })
+          })
+        }
+      })
+    }, 500)
   })
 
   // 监听#notion-article下的.code-toolbar元素变化，确保DOM稳定后添加Mac风格UI元素
-  const macStyleObserver = new MutationObserver((mutationsList) => {
-    mutationsList.forEach(mutation => {
-      if (mutation.type === 'childList') {
-        mutation.addedNodes.forEach(node => {
-          if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('code-toolbar')) {
-            // 新增的.code-toolbar元素，检查并添加Mac风格UI元素
-            const existPreMac = node.querySelector('.pre-mac');
-            if (!existPreMac) {
-              const preMac = document.createElement('div')
-              preMac.classList.add('pre-mac')
-              preMac.innerHTML = '<span></span><span></span><span></span>'
-              node.insertBefore(preMac, node.firstChild)
-            }
-          }
-        });
-      }
-    });
-  });
+  // const macStyleObserver = new MutationObserver((mutationsList) => {
+  //   setTimeout(() => {
+  //     mutationsList.forEach(mutation => {
+  //       if (mutation.type === 'childList') {
+  //         mutation.addedNodes.forEach(node => {
+  //           if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('code-toolbar')) {
+  //             // 新增的.code-toolbar元素，检查并添加Mac风格UI元素
+  //             const existPreMac = node.querySelector('.pre-mac');
+  //             if (!existPreMac) {
+  //               const preMac = document.createElement('div')
+  //               preMac.classList.add('pre-mac')
+  //               preMac.innerHTML = '<span></span><span></span><span></span>'
+  //               node.insertBefore(preMac, node.firstChild)
+  //             }
+  //           }
+  //         });
+  //       }
+  //     });
+  //   }, 500)
+  // });
 
   // 开始观察
-  if (container) {
-    lineNumberObserver.observe(container, { childList: true, subtree: true })
-    macStyleObserver.observe(container, { childList: true, subtree: true })
+  if (ctn) {
+    lineNumberObserver.observe(ctn, { childList: true, subtree: true })
+    // macStyleObserver.observe(ctn, { childList: true, subtree: true })
   }
 
   // 初始时直接处理已存在的pre元素
-  const existingPreElements = container?.getElementsByTagName('pre')
+  const existingPreElements = ctn?.getElementsByTagName('pre')
   if (codeLineNumbers) {
     Array.from(existingPreElements).forEach(item => {
       if (!item.classList.contains('line-numbers')) {
