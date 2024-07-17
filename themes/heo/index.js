@@ -372,14 +372,14 @@ const Layout404 = props => {
             <div className='error-content flex flex-col md:flex-row w-full mt-12 h-[30rem] md:h-96 justify-center items-center bg-white dark:bg-[#1B1C20] border dark:border-gray-800 rounded-3xl'>
               {/* 左侧动图 */}
               <LazyImage
-                className='error-img w-96 md:h-full p-4'
+                className='error-img w-96 md:h-full p-4 mr-8'
                 src={
                   'https://raw.githubusercontent.com/kpl1715191173/source_box/main/images/blog404.svg'
                 }></LazyImage>
 
               {/* 右侧文字 */}
               <div className='error-info flex-1 flex flex-col justify-center items-center space-y-4'>
-                <h1 className='error-title font-extrabold md:text-9xl text-7xl dark:text-white'>
+                <h1 className='error-title font-extrabold md:text-6xl text-7xl dark:text-white'>
                   404
                 </h1>
                 <div className='dark:text-white'>请尝试站内搜索寻找文章</div>
