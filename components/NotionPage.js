@@ -180,12 +180,7 @@ const allToggleExpand = (NOTION_CONFIG) => {
   const TOGGLE_EXPAND = JSON.parse(siteConfig('TOGGLE_EXPAND', false, NOTION_CONFIG))
 
   if (TOGGLE_EXPAND) {
-    let wrapperElement = null
-    if (THEME === 'hexo')
-      wrapperElement = document.getElementById('wrapper')
-    else if (THEME === 'heo')
-      wrapperElement = document.getElementById('article-wrapper')
-
+    const wrapperElement = document.getElementsByClassName('article-wrapper-section')[0]
 
     if (wrapperElement) {
       const detailsElements = wrapperElement.getElementsByClassName('notion-toggle')
