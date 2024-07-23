@@ -144,7 +144,7 @@ const LayoutSlug = props => {
       <div className='container grow'>
         <div className='flex flex-wrap justify-center -mx-4'>
           <div className='w-full p-4'>
-            <div id='container-inner' className='mx-auto article-wrapper-section'>
+            <div id='container-inner' className='mx-auto article-wrapper-main'>
               <NotionPage {...props} />
             </div>
           </div>

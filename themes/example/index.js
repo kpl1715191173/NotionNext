@@ -179,7 +179,7 @@ const LayoutSlug = props => {
       {lock ? (
         <PostLock validPassword={validPassword} />
       ) : (
-        <div id='article-wrapper' className='article-wrapper-section'>
+        <div id='article-wrapper' className='article-wrapper-main'>
           <PostMeta post={post} />
           <NotionPage post={post} />
           <ShareBar post={post} />

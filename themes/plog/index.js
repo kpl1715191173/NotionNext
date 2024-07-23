@@ -185,7 +185,7 @@ const LayoutSlug = props => {
 
             {lock && <ArticleLock validPassword={validPassword} />}
 
-            {!lock && <div id="article-wrapper" className="px-2 my-16 max-w-6xl mx-auto article-wrapper-section">
+            {!lock && <div id="article-wrapper" className="px-2 my-16 max-w-6xl mx-auto article-wrapper-main">
                 <>
                     <ArticleInfo post={post} />
                     <NotionPage post={post} />
