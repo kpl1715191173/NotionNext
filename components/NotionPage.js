@@ -179,7 +179,7 @@ const allToggleExpand = (NOTION_CONFIG) => {
   const TOGGLE_EXPAND = JSON.parse(siteConfig('TOGGLE_EXPAND', false, NOTION_CONFIG))
 
   if (TOGGLE_EXPAND) {
-    const wrapperElement = document.getElementsByClassName('article-wrapper-section')[0]
+    const wrapperElement = document.getElementsByClassName('article-wrapper-main')[0]
 
     if (wrapperElement) {
       const detailsElements = wrapperElement.getElementsByClassName('notion-toggle')
